@@ -10,6 +10,7 @@ from Login import Login
 if __name__ == '__main__':
   try:
     GPIO.setmode(GPIO.BOARD)
+    buzzer = Buzzer()
     login = Login()
     keypad = Keypad(login)
     while True:
