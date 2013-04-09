@@ -3,10 +3,11 @@ import RPi.GPIO as GPIO
 from RaspberryPi import RaspberryPi
 from LCD import LCD
 from time import sleep
+from Login import Login
 
 class Keypad:
   
-  def __init__(self):  
+  def __init__(self, database):  
     self.pins = [RaspberryPi.GPIO0,
                  RaspberryPi.GPIO1,
                  RaspberryPi.GPIO2,
@@ -31,6 +32,8 @@ class Keypad:
                    RaspberryPi.GPIO2: pin2,
                    RaspberryPi.GPIO4: pin4}
     self.message = ''
+    self.password = ''
+    self.typePassword = 0
       
     for i in range(3):
       GPIO.setup(self.pins[::2][i], GPIO.OUT)
@@ -38,6 +41,7 @@ class Keypad:
     GPIO.setup(self.pins[6], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
     self.lcd = LCD()
+    self.login = database
 
     self.setup_callbacks()
     self.loop()
@@ -51,10 +55,26 @@ class Keypad:
 
   def callback(self, channel):
     if (GPIO.input(channel)):
-      print 'PRESS: ', self.lookup[self.active][channel]
-      self.message += self.lookup[self.active][channel]
+      char = self.lookup[self.active][channel]
+      print 'PRESS: ', char
+      self.message += char
       self.lcd.clear()
       self.lcd.message(self.message)
+
+      if(char == '*'):
+        self.typePassword = 1
+        self.password = ''
+      elif(char == '#' and self.typePassword == 1):
+        self.typePassword = 0
+        user = self.login.check_login(self.password)
+        sleep(0.5)
+        self.lcd.clear()
+        self.lcd.message(user)
+        self.message = ''
+        sleep(3)
+        self.lcd.clear()
+      elif(self.typePassword == 1):
+        self.password += char
 
   def loop(self):
     while True:
