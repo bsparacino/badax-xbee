@@ -39,7 +39,7 @@ class Keypad:
     for i in range(3):
       GPIO.setup(self.pins[::2][i], GPIO.OUT)
       GPIO.setup(self.pins[1::2][i], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.setup(self.pins[6], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+      GPIO.setup(self.pins[6], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
     self.buzzer = Buzzer()
     self.lcd = LCD()
@@ -50,15 +50,14 @@ class Keypad:
 
   def setup_callbacks(self):
     for i in range(3):
-      GPIO.add_event_detect(self.pins[1::2][i], GPIO.RISING,
-                            callback=self.callback, bouncetime=200)
-    GPIO.add_event_detect(self.pins[6], GPIO.RISING,
-                          callback=self.callback, bouncetime=200)
+      GPIO.add_event_detect(self.pins[1::2][i], GPIO.RISING, callback=self.callback, bouncetime=200)
+    GPIO.add_event_detect(self.pins[6], GPIO.RISING, callback=self.callback, bouncetime=200)
 
   def callback(self, channel):
+
     if (GPIO.input(channel)):
+
       char = self.lookup[self.active][channel]
-      self.buzzer.beep(659, 125)
       print 'PRESS: ', char
       self.message += char
       self.lcd.clear()
@@ -74,16 +73,23 @@ class Keypad:
         self.lcd.clear()
         self.lcd.message(user)
         self.message = ''
+
+        if(self.password == '1111'):
+          self.buzzer.mario()
+
         sleep(3)
         self.lcd.clear()
       elif(self.typePassword == 1):
         self.password += char
+
+      self.buzzer.beep(659, 5)
 
   def loop(self):
     while True:
       for i in range(3):
         self.active = self.pins[::2][i]
         GPIO.output(self.active, True)
-        sleep(0.01)
+        sleep(0.05)
         GPIO.output(self.active, False)
+        sleep(0.05)
 
