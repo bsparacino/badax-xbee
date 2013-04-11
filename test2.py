@@ -8,6 +8,8 @@ if __name__ == '__main__':
   try:
     GPIO.setmode(GPIO.BOARD)
     buzzer = Buzzer()
+    buzzer.beep(659, 125)
+    buzzer.mario()
     
     while True:
       pass

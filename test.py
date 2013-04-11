@@ -4,13 +4,13 @@
 import RPi.GPIO as GPIO
 from Keypad import Keypad
 from LCD import LCD
-from Buzzer import Buzzer
+#from Buzzer import Buzzer
 from Login import Login
 
 if __name__ == '__main__':
   try:
     GPIO.setmode(GPIO.BOARD)
-    buzzer = Buzzer()
+    #buzzer = Buzzer()
     login = Login()
     keypad = Keypad(login)
     

@@ -13,40 +13,11 @@ class Buzzer:
             GPIO.setup(pin, GPIO.OUT)
         #self.boop()
         #self.mario()
-        self.mario3()
+        #time.sleep(5)
+        #self.storm()
+        #self.beep(659, 125)
 
-    def beep(self):
-        PIN = RaspberryPi.SDA
-        BUZZER_REPETITIONS = 20
-        BUZZER_DELAY = 0.001
-        PAUSE_TIME = 0.05
-
-        #GPIO.setmode(GPIO.BCM)
-        #GPIO.setup(pin, GPIO.OUT)
-
-        while False:
-            for _ in xrange(BUZZER_REPETITIONS):
-                for value in [True, False]:
-                    GPIO.output(PIN, value)
-                    time.sleep(BUZZER_DELAY)
-            time.sleep(PAUSE_TIME)   
-
-    def beep2(self):
-        number = 0.000001
-        timer = 500
-
-        while timer != 0:
-            GPIO.output(RaspberryPi.SDA, True)
-            time.sleep(number)
-            GPIO.output(RaspberryPi.SDA, False)
-            time.sleep(number/100)
-            timer = timer - 1
-            print timer;
-
-        timer = 200
-        time.sleep(0.3)
-
-    def beep3(self, hz, ms):
+    def beep(self, hz, ms):
 
         #print 'beep ' + str(hz) + 'hz ' + str(ms) + 'ms'
         DELAY_OFFSET = 11
@@ -65,10 +36,10 @@ class Buzzer:
 
         #time.sleep(0.05)
 
-    def beepLoop(self):
+    def beepBoopLoop(self):
         for i in range(0, 100000):
             print i
-            self.beep3(2000, 1000)
+            self.beep(2000, 1000)
             time.sleep(0.10)
 
     def boop(self):
@@ -79,605 +50,374 @@ class Buzzer:
                 time.sleep(0.001)
         time.sleep(0.05) 
 
-    def mario(self):
-
-        C   = 1911
-        C1  =  1804
-        D   = 1703
-        Eb  =  1607
-        E   = 1517
-        F   = 1432
-        F1  = 1352
-        G   = 1276
-        Ab  = 1204
-        A   = 1136
-        Bb   = 1073
-        B    = 1012
-        c    =   955
-        c1   =   902
-        d     =  851
-        eb    =  803
-        e     =  758
-        f     =  716
-        f1    =  676
-        g     =  638
-        ab    =  602
-        a     =  568
-        bb    =  536
-        b     =  506
-
-        print 'MARIO :D'        
-
-        melod = [e, e, e, c, e, g, G, c, G, E, A, B, Bb, A, G, e, g, a, f, g, e, c, d, B, c]
-        ritmo = [6, 12, 12, 6, 12, 24, 24, 18, 18, 18, 12, 12, 6, 12, 8, 8, 8, 12, 6, 12, 12, 6, 6, 6, 12]
-
-        #melod = [G, E, D, C, D, E, G, E, D, C, D, E, D, E,G, E, G, A, E, A, G, E, D, C]
-        #ritmo = [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 16]
-
-        #melod = [G, A, G, E, G, A, G, E, c, c, A, B, B, G, A, G, A, c, B, A, G, A, G, E]
-        #ritmo = [12, 4, 8, 16, 12, 4, 8, 16, 12, 4, 16, 12, 4, 16, 12, 4, 8, 8, 8, 8, 12, 4, 8, 16]
-
-        #melod = [Bb, G, G, Bb, G, G, Bb, G, G, Bb, G, G, Bb, G, C, G, Bb, G, G, Bb, G, G, Bb, G, G, Bb, G, G, Bb, G, F, D, F, D, G, F, D, C, Bb, G, Bb, C, C1, C, Bb, F, D, Bb, G, F, D, C, Bb, D, C, Bb, G]
-        #ritmo = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
-
-        for i in range(0, len(melod)):
-            tom = melod[i]
-            tempo = ritmo[i]
-
-            print str(tom) + ' - ' + str(tempo)
-     
-            vel = 20000
-            tempo_value = tempo * vel
-
-            sleep_time = tom/2048000.0
-
-            tempo_gasto = 0;
-            while (tempo_gasto < tempo_value):
-                tempo_gasto += tom
-
-                GPIO.output(RaspberryPi.SDA, True)
-                #GPIO.output(RaspberryPi.SCL, False)
-                time.sleep(sleep_time)
-                GPIO.output(RaspberryPi.SDA, False)
-                #GPIO.output(RaspberryPi.SCL, True)
-                time.sleep(sleep_time)
-
-            time.sleep(0.01)
-        time.sleep(1)
-
     def sleep2(self, ms):
         sleep_time = ms/1000.0
         time.sleep(sleep_time)
 
-    def mario2(self):
-        self.beep3(660, 100)
-        self.sleep2(150)
-        self.beep3(660, 100)
-        self.sleep2(300)
-        self.beep3(660, 100)
-        self.sleep2(300)
-        self.beep3(510, 100)
-        self.sleep2(100)
-        self.beep3(660, 100)
-        self.sleep2(300)
-        self.beep3(770, 100)
-        self.sleep2(550)
-        self.beep3(380, 100)
-        self.sleep2(575)
-
-        self.beep3(510, 100)
-        self.sleep2(450)
-        self.beep3(380, 100)
-        self.sleep2(400)
-        self.beep3(320, 100)
-        self.sleep2(500)
-        self.beep3(440, 100)
-        self.sleep2(300)
-        self.beep3(480, 80)
-        self.sleep2(330)
-        self.beep3(450, 100)
-        self.sleep2(150)
-        self.beep3(430, 100)
-        self.sleep2(300)
-        self.beep3(380, 100)
-        self.sleep2(200)
-        self.beep3(660, 80)
-        self.sleep2(200)
-        self.beep3(760, 50)
-        self.sleep2(150)
-        self.beep3(860, 100)
-        self.sleep2(300)
-        self.beep3(700, 80)
-        self.sleep2(150)
-        self.beep3(760, 50)
-        self.sleep2(350)
-        self.beep3(660, 80)
-        self.sleep2(300)
-        self.beep3(520, 80)
-        self.sleep2(150)
-        self.beep3(580, 80)
-        self.sleep2(150)
-        self.beep3(480, 80)
-        self.sleep2(500)
-
-        self.beep3(510, 100)
-        self.sleep2(450)
-        self.beep3(380, 100)
-        self.sleep2(400)
-        self.beep3(320, 100)
-        self.sleep2(500)
-        self.beep3(440, 100)
-        self.sleep2(300)
-        self.beep3(480, 80)
-        self.sleep2(330)
-        self.beep3(450, 100)
-        self.sleep2(150)
-        self.beep3(430, 100)
-        self.sleep2(300)
-        self.beep3(380, 100)
-        self.sleep2(200)
-        self.beep3(660, 80)
-        self.sleep2(200)
-        self.beep3(760, 50)
-        self.sleep2(150)
-        self.beep3(860, 100)
-        self.sleep2(300)
-        self.beep3(700, 80)
-        self.sleep2(150)
-        self.beep3(760, 50)
-        self.sleep2(350)
-        self.beep3(660, 80)
-        self.sleep2(300)
-        self.beep3(520, 80)
-        self.sleep2(150)
-        self.beep3(580, 80)
-        self.sleep2(150)
-        self.beep3(480, 80)
-        self.sleep2(500)
-
-        self.beep3(500, 100)
-        self.sleep2(300)
-
-        self.beep3(760, 100)
-        self.sleep2(100)
-        self.beep3(720, 100)
-        self.sleep2(150)
-        self.beep3(680, 100)
-        self.sleep2(150)
-        self.beep3(620, 150)
-        self.sleep2(300)
-
-        self.beep3(650, 150)
-        self.sleep2(300)
-        self.beep3(380, 100)
-        self.sleep2(150)
-        self.beep3(430, 100)
-        self.sleep2(150)
-
-        self.beep3(500, 100)
-        self.sleep2(300)
-        self.beep3(430, 100)
-        self.sleep2(150)
-        self.beep3(500, 100)
-        self.sleep2(100)
-        self.beep3(570, 100)
-        self.sleep2(220)
-
-        self.beep3(500, 100)
-        self.sleep2(300)
-
-        self.beep3(760, 100)
-        self.sleep2(100)
-        self.beep3(720, 100)
-        self.sleep2(150)
-        self.beep3(680, 100)
-        self.sleep2(150)
-        self.beep3(620, 150)
-        self.sleep2(300)
-
-        self.beep3(650, 200)
-        self.sleep2(300)
-
-        self.beep3(1020, 80)
-        self.sleep2(300)
-        self.beep3(1020, 80)
-        self.sleep2(150)
-        self.beep3(1020, 80)
-        self.sleep2(300)
-
-        self.beep3(380, 100)
-        self.sleep2(300)
-        self.beep3(500, 100)
-        self.sleep2(300)
-
-        self.beep3(760, 100)
-        self.sleep2(100)
-        self.beep3(720, 100)
-        self.sleep2(150)
-        self.beep3(680, 100)
-        self.sleep2(150)
-        self.beep3(620, 150)
-        self.sleep2(300)
-
-        self.beep3(650, 150)
-        self.sleep2(300)
-        self.beep3(380, 100)
-        self.sleep2(150)
-        self.beep3(430, 100)
-        self.sleep2(150)
-
-        self.beep3(500, 100)
-        self.sleep2(300)
-        self.beep3(430, 100)
-        self.sleep2(150)
-        self.beep3(500, 100)
-        self.sleep2(100)
-        self.beep3(570, 100)
-        self.sleep2(420)
-
-        self.beep3(585, 100)
-        self.sleep2(450)
-
-        self.beep3(550, 100)
-        self.sleep2(420)
-
-        self.beep3(500, 100)
-        self.sleep2(360)
-
-        self.beep3(380, 100)
-        self.sleep2(300)
-        self.beep3(500, 100)
-        self.sleep2(300)
-        self.beep3(500, 100)
-        self.sleep2(150)
-        self.beep3(500, 100)
-        self.sleep2(300)
-
-        self.beep3(500, 100)
-        self.sleep2(300)
-
-        self.beep3(760, 100)
-        self.sleep2(100)
-        self.beep3(720, 100)
-        self.sleep2(150)
-        self.beep3(680, 100)
-        self.sleep2(150)
-        self.beep3(620, 150)
-        self.sleep2(300)
-
-        self.beep3(650, 150)
-        self.sleep2(300)
-        self.beep3(380, 100)
-        self.sleep2(150)
-        self.beep3(430, 100)
-        self.sleep2(150)
-
-        self.beep3(500, 100)
-        self.sleep2(300)
-        self.beep3(430, 100)
-        self.sleep2(150)
-        self.beep3(500, 100)
-        self.sleep2(100)
-        self.beep3(570, 100)
-        self.sleep2(220)
-
-        self.beep3(500, 100)
-        self.sleep2(300)
-
-        self.beep3(760, 100)
-        self.sleep2(100)
-        self.beep3(720, 100)
-        self.sleep2(150)
-        self.beep3(680, 100)
-        self.sleep2(150)
-        self.beep3(620, 150)
-        self.sleep2(300)
-
-        self.beep3(650, 200)
-        self.sleep2(300)
-
-        self.beep3(1020, 80)
-        self.sleep2(300)
-        self.beep3(1020, 80)
-        self.sleep2(150)
-        self.beep3(1020, 80)
-        self.sleep2(300)
-
-        self.beep3(380, 100)
-        self.sleep2(300)
-        self.beep3(500, 100)
-        self.sleep2(300)
-
-        self.beep3(760, 100)
-        self.sleep2(100)
-        self.beep3(720, 100)
-        self.sleep2(150)
-        self.beep3(680, 100)
-        self.sleep2(150)
-        self.beep3(620, 150)
-        self.sleep2(300)
-
-        self.beep3(650, 150)
-        self.sleep2(300)
-        self.beep3(380, 100)
-        self.sleep2(150)
-        self.beep3(430, 100)
-        self.sleep2(150)
-
-        self.beep3(500, 100)
-        self.sleep2(300)
-        self.beep3(430, 100)
-        self.sleep2(150)
-        self.beep3(500, 100)
-        self.sleep2(100)
-        self.beep3(570, 100)
-        self.sleep2(420)
-
-        self.beep3(585, 100)
-        self.sleep2(450)
-
-        self.beep3(550, 100)
-        self.sleep2(420)
-
-        self.beep3(500, 100)
-        self.sleep2(360)
-
-        self.beep3(380, 100)
-        self.sleep2(300)
-        self.beep3(500, 100)
-        self.sleep2(300)
-        self.beep3(500, 100)
-        self.sleep2(150)
-        self.beep3(500, 100)
-        self.sleep2(300)
-
-        self.beep3(500, 60)
-        self.sleep2(150)
-        self.beep3(500, 80)
-        self.sleep2(300)
-        self.beep3(500, 60)
-        self.sleep2(350)
-        self.beep3(500, 80)
-        self.sleep2(150)
-        self.beep3(580, 80)
-        self.sleep2(350)
-        self.beep3(660, 80)
-        self.sleep2(150)
-        self.beep3(500, 80)
-        self.sleep2(300)
-        self.beep3(430, 80)
-        self.sleep2(150)
-        self.beep3(380, 80)
-        self.sleep2(600)
-
-        self.beep3(500, 60)
-        self.sleep2(150)
-        self.beep3(500, 80)
-        self.sleep2(300)
-        self.beep3(500, 60)
-        self.sleep2(350)
-        self.beep3(500, 80)
-        self.sleep2(150)
-        self.beep3(580, 80)
-        self.sleep2(150)
-        self.beep3(660, 80)
-        self.sleep2(550)
-
-        self.beep3(870, 80)
-        self.sleep2(325)
-        self.beep3(760, 80)
-        self.sleep2(600)
-
-        self.beep3(500, 60)
-        self.sleep2(150)
-        self.beep3(500, 80)
-        self.sleep2(300)
-        self.beep3(500, 60)
-        self.sleep2(350)
-        self.beep3(500, 80)
-        self.sleep2(150)
-        self.beep3(580, 80)
-        self.sleep2(350)
-        self.beep3(660, 80)
-        self.sleep2(150)
-        self.beep3(500, 80)
-        self.sleep2(300)
-        self.beep3(430, 80)
-        self.sleep2(150)
-        self.beep3(380, 80)
-        self.sleep2(600)
-
-        self.beep3(660, 100)
-        self.sleep2(150)
-        self.beep3(660, 100)
-        self.sleep2(300)
-        self.beep3(660, 100)
-        self.sleep2(300)
-        self.beep3(510, 100)
-        self.sleep2(100)
-        self.beep3(660, 100)
-        self.sleep2(300)
-        self.beep3(770, 100)
-        self.sleep2(550)
-        self.beep3(380, 100)
-        self.sleep2(575)
-
-    def mario3(self):
-        self.beep3(659, 125)
-        self.beep3(659, 125)
+    def mario(self):
+        self.beep(659, 125)
+        self.beep(659, 125)
         self.sleep2(125)
-        self.beep3(659, 125)
+        self.beep(659, 125)
         self.sleep2(167)
-        self.beep3(523, 125)
-        self.beep3(659, 125)
+        self.beep(523, 125)
+        self.beep(659, 125)
         self.sleep2(125)
-        self.beep3(784, 125)
+        self.beep(784, 125)
         self.sleep2(375)
-        self.beep3(392, 125)
+        self.beep(392, 125)
         self.sleep2(375)
-        self.beep3(523, 125)
+        self.beep(523, 125)
         self.sleep2(250)
-        self.beep3(392, 125)
+        self.beep(392, 125)
         self.sleep2(250)
-        self.beep3(330, 125)
+        self.beep(330, 125)
         self.sleep2(250)
-        self.beep3(440, 125)
+        self.beep(440, 125)
         self.sleep2(125)
-        self.beep3(494, 125)
+        self.beep(494, 125)
         self.sleep2(125)
-        self.beep3(466, 125)
+        self.beep(466, 125)
         self.sleep2(42)
-        self.beep3(440, 125)
+        self.beep(440, 125)
         self.sleep2(125)
-        self.beep3(392, 125)
+        self.beep(392, 125)
         self.sleep2(125)
-        self.beep3(659, 125)
+        self.beep(659, 125)
         self.sleep2(125)
-        self.beep3(784, 125)
+        self.beep(784, 125)
         self.sleep2(125)
-        self.beep3(880, 125)
+        self.beep(880, 125)
         self.sleep2(125)
-        self.beep3(698, 125)
-        self.beep3(784, 125)
+        self.beep(698, 125)
+        self.beep(784, 125)
         self.sleep2(125)
-        self.beep3(659, 125)
+        self.beep(659, 125)
         self.sleep2(125)
-        self.beep3(523, 125)
+        self.beep(523, 125)
         self.sleep2(125)
-        self.beep3(587, 125)
-        self.beep3(494, 125)
+        self.beep(587, 125)
+        self.beep(494, 125)
         self.sleep2(125)
-        self.beep3(523, 125)
+        self.beep(523, 125)
         self.sleep2(250)
-        self.beep3(392, 125)
+        self.beep(392, 125)
         self.sleep2(250)
-        self.beep3(330, 125)
+        self.beep(330, 125)
         self.sleep2(250)
-        self.beep3(440, 125)
+        self.beep(440, 125)
         self.sleep2(125)
-        self.beep3(494, 125)
+        self.beep(494, 125)
         self.sleep2(125)
-        self.beep3(466, 125)
+        self.beep(466, 125)
         self.sleep2(42)
-        self.beep3(440, 125)
+        self.beep(440, 125)
         self.sleep2(125)
-        self.beep3(392, 125)
+        self.beep(392, 125)
         self.sleep2(125)
-        self.beep3(659, 125)
+        self.beep(659, 125)
         self.sleep2(125)
-        self.beep3(784, 125)
+        self.beep(784, 125)
         self.sleep2(125)
-        self.beep3(880, 125)
+        self.beep(880, 125)
         self.sleep2(125)
-        self.beep3(698, 125)
-        self.beep3(784, 125)
+        self.beep(698, 125)
+        self.beep(784, 125)
         self.sleep2(125)
-        self.beep3(659, 125)
+        self.beep(659, 125)
         self.sleep2(125)
-        self.beep3(523, 125)
+        self.beep(523, 125)
         self.sleep2(125)
-        self.beep3(587, 125)
-        self.beep3(494, 125)
+        self.beep(587, 125)
+        self.beep(494, 125)
         self.sleep2(375)
-        self.beep3(784, 125)
-        self.beep3(740, 125)
-        self.beep3(698, 125)
+        self.beep(784, 125)
+        self.beep(740, 125)
+        self.beep(698, 125)
         self.sleep2(42)
-        self.beep3(622, 125)
+        self.beep(622, 125)
         self.sleep2(125)
-        self.beep3(659, 125)
+        self.beep(659, 125)
         self.sleep2(167)
-        self.beep3(415, 125)
-        self.beep3(440, 125)
-        self.beep3(523, 125)
+        self.beep(415, 125)
+        self.beep(440, 125)
+        self.beep(523, 125)
         self.sleep2(125)
-        self.beep3(440, 125)
-        self.beep3(523, 125)
-        self.beep3(587, 125)
+        self.beep(440, 125)
+        self.beep(523, 125)
+        self.beep(587, 125)
         self.sleep2(250)
-        self.beep3(784, 125)
-        self.beep3(740, 125)
-        self.beep3(698, 125)
+        self.beep(784, 125)
+        self.beep(740, 125)
+        self.beep(698, 125)
         self.sleep2(42)
-        self.beep3(622, 125)
+        self.beep(622, 125)
         self.sleep2(125)
-        self.beep3(659, 125)
+        self.beep(659, 125)
         self.sleep2(167)
-        self.beep3(698, 125)
+        self.beep(698, 125)
         self.sleep2(125)
-        self.beep3(698, 125)
-        self.beep3(698, 125)
+        self.beep(698, 125)
+        self.beep(698, 125)
         self.sleep2(625)
-        self.beep3(784, 125)
-        self.beep3(740, 125)
-        self.beep3(698, 125)
+        self.beep(784, 125)
+        self.beep(740, 125)
+        self.beep(698, 125)
         self.sleep2(42)
-        self.beep3(622, 125)
+        self.beep(622, 125)
         self.sleep2(125)
-        self.beep3(659, 125)
+        self.beep(659, 125)
         self.sleep2(167)
-        self.beep3(415, 125)
-        self.beep3(440, 125)
-        self.beep3(523, 125)
+        self.beep(415, 125)
+        self.beep(440, 125)
+        self.beep(523, 125)
         self.sleep2(125)
-        self.beep3(440, 125)
-        self.beep3(523, 125)
-        self.beep3(587, 125)
+        self.beep(440, 125)
+        self.beep(523, 125)
+        self.beep(587, 125)
         self.sleep2(250)
-        self.beep3(622, 125)
+        self.beep(622, 125)
         self.sleep2(250)
-        self.beep3(587, 125)
+        self.beep(587, 125)
         self.sleep2(250)
-        self.beep3(523, 125)
+        self.beep(523, 125)
         self.sleep2(1125)
-        self.beep3(784, 125)
-        self.beep3(740, 125)
-        self.beep3(698, 125)
+        self.beep(784, 125)
+        self.beep(740, 125)
+        self.beep(698, 125)
         self.sleep2(42)
-        self.beep3(622, 125)
+        self.beep(622, 125)
         self.sleep2(125)
-        self.beep3(659, 125)
+        self.beep(659, 125)
         self.sleep2(167)
-        self.beep3(415, 125)
-        self.beep3(440, 125)
-        self.beep3(523, 125)
+        self.beep(415, 125)
+        self.beep(440, 125)
+        self.beep(523, 125)
         self.sleep2(125)
-        self.beep3(440, 125)
-        self.beep3(523, 125)
-        self.beep3(587, 125)
+        self.beep(440, 125)
+        self.beep(523, 125)
+        self.beep(587, 125)
         self.sleep2(250)
-        self.beep3(784, 125)
-        self.beep3(740, 125)
-        self.beep3(698, 125)
+        self.beep(784, 125)
+        self.beep(740, 125)
+        self.beep(698, 125)
         self.sleep2(42)
-        self.beep3(622, 125)
+        self.beep(622, 125)
         self.sleep2(125)
-        self.beep3(659, 125)
+        self.beep(659, 125)
         self.sleep2(167)
-        self.beep3(698, 125)
+        self.beep(698, 125)
         self.sleep2(125)
-        self.beep3(698, 125)
-        self.beep3(698, 125)
+        self.beep(698, 125)
+        self.beep(698, 125)
         self.sleep2(625)
-        self.beep3(784, 125)
-        self.beep3(740, 125)
-        self.beep3(698, 125)
+        self.beep(784, 125)
+        self.beep(740, 125)
+        self.beep(698, 125)
         self.sleep2(42)
-        self.beep3(622, 125)
+        self.beep(622, 125)
         self.sleep2(125)
-        self.beep3(659, 125)
+        self.beep(659, 125)
         self.sleep2(167)
-        self.beep3(415, 125)
-        self.beep3(440, 125)
-        self.beep3(523, 125)
+        self.beep(415, 125)
+        self.beep(440, 125)
+        self.beep(523, 125)
         self.sleep2(125)
-        self.beep3(440, 125)
-        self.beep3(523, 125)
-        self.beep3(587, 125)
+        self.beep(440, 125)
+        self.beep(523, 125)
+        self.beep(587, 125)
         self.sleep2(250)
-        self.beep3(622, 125)
+        self.beep(622, 125)
         self.sleep2(250)
-        self.beep3(587, 125)
+        self.beep(587, 125)
         self.sleep2(250)
-        self.beep3(523, 125)
+        self.beep(523, 125)
         self.sleep2(625)
+    def storm(self):
+         NOTE_B0  =31
+         NOTE_C1  =33
+         NOTE_CS1 =35
+         NOTE_D1  =37
+         NOTE_DS1 =39
+         NOTE_E1  =41
+         NOTE_F1  =44
+         NOTE_FS1 =46
+         NOTE_G1  =49
+         NOTE_GS1 =52
+         NOTE_A1  =55
+         NOTE_AS1 =58
+         NOTE_B1  =62
+         NOTE_C2  =65
+         NOTE_CS2 =69
+         NOTE_D2  =73
+         NOTE_DS2 =78
+         NOTE_E2  =82
+         NOTE_F2  =87
+         NOTE_FS2 =93
+         NOTE_G2  =98
+         NOTE_GS2 =104
+         NOTE_A2  =110
+         NOTE_AS2 =117
+         NOTE_B2  =123
+         NOTE_C3  =131
+         NOTE_CS3 =139
+         NOTE_D3  =147
+         NOTE_DS3 =156
+         NOTE_E3  =165
+         NOTE_F3  =175
+         NOTE_FS3 =185
+         NOTE_G3  =196
+         NOTE_GS3 =208
+         NOTE_A3  =220
+         NOTE_AS3 =233
+         NOTE_B3  =247
+         NOTE_C4  =262
+         NOTE_CS4 =277
+         NOTE_D4  =294
+         NOTE_DS4 =311
+         NOTE_E4  =330
+         NOTE_F4  =349
+         NOTE_FS4 =370
+         NOTE_G4  =392
+         NOTE_GS4 =415
+         NOTE_A4  =440
+         NOTE_AS4 =466
+         NOTE_B4  =494
+         NOTE_C5  =523
+         NOTE_CS5 =554
+         NOTE_D5  =587
+         NOTE_DS5 =622
+         NOTE_E5  =659
+         NOTE_F5  =698
+         NOTE_FS5 =740
+         NOTE_G5  =784
+         NOTE_GS5 =831
+         NOTE_A5  =880
+         NOTE_AS5 =932
+         NOTE_B5  =988
+         NOTE_C6  =1047
+         NOTE_CS6 =1109
+         NOTE_D6  =1175
+         NOTE_DS6 =1245
+         NOTE_E6  =1319
+         NOTE_F6  =1397
+         NOTE_FS6 =1480
+         NOTE_G6  =1568
+         NOTE_GS6 =1661
+         NOTE_A6  =1760
+         NOTE_AS6 =1865
+         NOTE_B6  =1976
+         NOTE_C7  =2093
+         NOTE_CS7 =2217
+         NOTE_D7  =2349
+         NOTE_DS7 =2489
+         NOTE_E7  =2637
+         NOTE_F7  =2794
+         NOTE_FS7 =2960
+         NOTE_G7  =3136
+         NOTE_GS7 =3322
+         NOTE_A7  =3520
+         NOTE_AS7 =3729
+         NOTE_B7  =3951
+         NOTE_C8  =4186
+         NOTE_CS8 =4435
+         NOTE_D8  =4699
+         NOTE_DS8 =4978
+         
+         self.beep( NOTE_D5, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_F5, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_D6, 200) 
+         self.sleep2(250)
+  
+         self.beep( NOTE_D5, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_F5, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_D6, 200)
+         self.sleep2(250)
+  
+         self.beep( NOTE_E6, 200) 
+         self.sleep2(200)
+         self.beep( NOTE_F6, 100) 
+         self.sleep2(100)
+         self.beep( NOTE_E6, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_F6, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_E6, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_C6, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_A5, 100) 
+         self.sleep2(300)
+  
+         self.beep( NOTE_A5, 200) 
+         self.sleep2(100)
+         self.beep( NOTE_D5, 200) 
+         self.sleep2(100)
+         self.beep( NOTE_F5, 100) 
+         self.sleep2(100)
+         self.beep( NOTE_G5, 100) 
+         self.sleep2(100)
+         self.beep( NOTE_A5, 100) 
+         self.sleep2(500)
+  
+         self.beep( NOTE_A5, 200) 
+         self.sleep2(100)
+         self.beep( NOTE_D5, 200) 
+         self.sleep2(100)
+         self.beep( NOTE_F5, 100) 
+         self.sleep2(100)
+         self.beep( NOTE_G5, 100) 
+         self.sleep2(100)
+         self.beep( NOTE_E5, 100) 
+         self.sleep2(500)
+  
+  
+  
+         self.beep( NOTE_D5, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_F5, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_D6, 200) 
+         self.sleep2(250)
+  
+         self.beep( NOTE_D5, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_F5, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_D6, 200)
+         self.sleep2(250)
+  
+         self.beep( NOTE_E6, 200) 
+         self.sleep2(200)
+         self.beep( NOTE_F6, 100) 
+         self.sleep2(100)
+         self.beep( NOTE_E6, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_F6, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_E6, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_C6, 100) 
+         self.sleep2(80)
+         self.beep( NOTE_A5, 100) 
+         self.sleep2(300)
+  
+         self.beep( NOTE_A5, 200) 
+         self.sleep2(100)
+         self.beep( NOTE_D5, 200) 
+         self.sleep2(100)
+         self.beep( NOTE_F5, 100) 
+         self.sleep2(100)
+         self.beep( NOTE_G5, 100) 
+         self.sleep2(100)
+         self.beep( NOTE_A5, 300)
+         self.sleep2(100)
+         self.beep( NOTE_A5, 200)
+         self.sleep2(100)
+         self.beep( NOTE_D5, 300)
+         self.sleep2(2000)
+         

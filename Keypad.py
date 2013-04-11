@@ -58,7 +58,7 @@ class Keypad:
   def callback(self, channel):
     if (GPIO.input(channel)):
       char = self.lookup[self.active][channel]
-      self.buzzer.boop()
+      self.buzzer.beep(659, 125)
       print 'PRESS: ', char
       self.message += char
       self.lcd.clear()
