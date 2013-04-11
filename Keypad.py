@@ -2,6 +2,7 @@
 import RPi.GPIO as GPIO
 from RaspberryPi import RaspberryPi
 from LCD import LCD
+from Buzzer import Buzzer
 from time import sleep
 from Login import Login
 
@@ -40,6 +41,7 @@ class Keypad:
       GPIO.setup(self.pins[1::2][i], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(self.pins[6], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
+    self.buzzer = Buzzer()
     self.lcd = LCD()
     self.login = database
 
@@ -56,6 +58,7 @@ class Keypad:
   def callback(self, channel):
     if (GPIO.input(channel)):
       char = self.lookup[self.active][channel]
+      self.buzzer.boop()
       print 'PRESS: ', char
       self.message += char
       self.lcd.clear()
