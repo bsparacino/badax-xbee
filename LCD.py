@@ -81,6 +81,14 @@ class LCD:
     self.cmd(self.LCD_ENTRYMODESET | self.displaymode)
     
     self.clear()
+    self.begin(15,2)
+    
+  def begin(self, cols, lines):
+
+      if (lines > 1):
+              self.numlines = lines
+              self.displayfunction |= self.LCD_2LINE
+              self.currline = 0    
 
   def clear(self):
     """ Clear the LCD """
@@ -115,7 +123,68 @@ class LCD:
 
     GPIO.output(self.e, True)
     GPIO.output(self.e, False)
+#----------------------------------------------------------------------------------------
+  def home(self):
 
+        self.cmd(self.LCD_RETURNHOME) # set cursor position to zero
+        sleep(0.003) # this command takes a long time!
+        
+  def setCursor(self, col, row):
+
+        self.row_offsets = [ 0x00, 0x40, 0x14, 0x54 ]
+
+        if ( row > self.numlines ): 
+                row = self.numlines - 1 # we count rows starting w/0
+
+        self.cmd(self.LCD_SETDDRAMADDR | (col + self.row_offsets[row]))
+        
+  def noDisplay(self): 
+      """ Turn the display off (quickly) """
+
+      self.displaycontrol &= ~self.LCD_DISPLAYON
+      self.cmd(self.LCD_DISPLAYCONTROL | self.displaycontrol)
+  
+  def display(self):
+      """ Turn the display on (quickly) """
+
+      self.displaycontrol |= self.LCD_DISPLAYON
+      self.cmd(self.LCD_DISPLAYCONTROL | self.displaycontrol)
+  
+  def scrollDisplayLeft(self):
+      """ These commands scroll the display without changing the RAM """
+
+      self.cmd(self.LCD_CURSORSHIFT | self.LCD_DISPLAYMOVE | self.LCD_MOVELEFT)
+
+
+  def scrollDisplayRight(self):
+      """ These commands scroll the display without changing the RAM """
+
+      self.cmd(self.LCD_CURSORSHIFT | self.LCD_DISPLAYMOVE | self.LCD_MOVERIGHT);   
+      
+  def noCursor(self):
+      """ Turns the underline cursor on/off """
+
+      self.displaycontrol &= ~self.LCD_CURSOROFF
+      self.cmd(self.LCD_DISPLAYCONTROL | self.displaycontrol) 
+  def Cursor(self):
+      """ Turns the underline cursor on/off """
+
+      self.displaycontrol |= self.LCD_CURSORON
+      self.cmd(self.LCD_DISPLAYCONTROL | self.displaycontrol)
+  
+  def noBlink(self):
+      """ Turn on and off the blinking cursor """
+
+      self.displaycontrol &= ~self.LCD_BLINKON
+      self.cmd(self.LCD_DISPLAYCONTROL | self.displaycontrol)
+
+
+  def Blink(self):
+      """ Turn on and off the blinking cursor """
+
+      self.displaycontrol |= self.LCD_BLINKON
+      self.cmd(self.LCD_DISPLAYCONTROL | self.displaycontrol)            
+#----------------------------------------------------------------------------------------      
   def message(self, text):
     """ Send string to LCD. """
     print 'Printing: ', text
@@ -125,4 +194,42 @@ class LCD:
         self.cmd(0xC0) # New Line Command
       else:
         self.cmd(ord(char), True)
+        
+if __name__ == '__main__':
+  try:
+    GPIO.setmode(GPIO.BOARD)
+    LCD = LCD()
+    
+    
+    LCD.noCursor()
+    LCD.message('CATS \nARE CUTE')
+    sleep(1)
+    LCD.Cursor()
+    LCD.message(' =)')
+    sleep(2)
+    for k in range (10):
+        LCD.scrollDisplayRight()
+        sleep(.1)
+    for k in range (10):
+        LCD.scrollDisplayLeft()
+        sleep(.1)
+    sleep(2)    
+    LCD.home()
+    for j in range (2):
+        for i in range (16):
+            LCD.setCursor(i,j)
+            sleep(.1)
+    LCD.clear()
+    LCD.setCursor(0,0)    
+    LCD.message('Something here:')
+    LCD.setCursor(0,1) 
+    LCD.Blink()
+    sleep(5)
+    LCD.noBlink()
+
+    while True:
+      pass
+		
+  except KeyboardInterrupt:
+    GPIO.cleanup()
 
