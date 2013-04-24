@@ -3,7 +3,7 @@
 # Imports
 import RPi.GPIO as GPIO
 from Buzzer import Buzzer
-from Receive import Receive
+from SensorProcess import SensorProcess
 import time
 
 if __name__ == '__main__':
@@ -12,10 +12,10 @@ if __name__ == '__main__':
     #buzzer = Buzzer()
     #buzzer.beep(659, 125)
     #buzzer.mario()
-    receive = Receive()
-    receive.trip_sensor('0013A2004092D86A')
+    sp = SensorProcess()
+    sp.trip_sensor('0013A2004092D86A')
     time.sleep(5)
-    receive.stop_timer()
+    sp.stop_timer()
     
     while True:
       pass

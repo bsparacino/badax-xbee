@@ -5,16 +5,19 @@ from RaspberryPi import RaspberryPi
 from Buzzer import Buzzer
 from LCD import LCD
 from Database import Database
+from Rec import Rec
  
 GPIO.setmode(GPIO.BOARD)
 DEBUG = 0
 
 class Buttons:
 
-    def __init__(self, database):
+    def __init__(self, database, receive, sensorProcess):
 
         self.database = database
         self.buzzer = Buzzer()
+        self.receive = receive
+        self.sp = sensorProcess
         self.password = ''
         self.typePassword = 0
         self.start()
@@ -136,7 +139,7 @@ class Buttons:
                     else:
                         print "Dunno: ", value   
                 
-                if ( value == 60):
+                if (value == 60):
                      released = True
                      printed = False
 
@@ -162,6 +165,8 @@ class Buttons:
                         time.sleep(5)
                         lcd.clear()
                         lcd.Blink()
+
+                        self.receive.stop_timer()
 
                     if(self.password == '1111'):
                         self.buzzer.mario()

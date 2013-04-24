@@ -10,11 +10,14 @@ import smtplib
 from email.mime.text import MIMEText
 import string
 
-class Receive():	
+class SensorProcess():
+
+	def __init__(self):
+		self.timeout = 20
+		self.timeout_thread = threading.Thread(target=self.start_timer_process, args=(self.timeout,))
 
 	def trip_sensor(self,sensorId):
-		self.cancelTimer = 0
-		self.timeout = 10
+		self.cancelTimer = 0		
 
 		con = MySQLdb.connect(host="localhost", user="root", passwd="badax", db="badax", cursorclass=MySQLdb.cursors.DictCursor)
 		cur = con.cursor()
@@ -27,8 +30,8 @@ class Receive():
 			if(sensor['type'] == 'Door'):
 				print 'sensor type: Door'
 
-				t = threading.Thread(target=self.start_timer, args=(self.timeout,))
-				t.start()
+				#t = threading.Thread(target=self.start_timer, args=(self.timeout,))
+				#t.start()
 				#self.start_timer(5)
 				print 'yay'
 
@@ -51,9 +54,23 @@ class Receive():
 		cur.close ()
 		con.close ()
 
-	def start_timer(self,timeout):
-		self.cancelTimer = 0
+	def start_timer(self):
+		print 'trying to start timer'
 
+		if(self.timeout_thread.isAlive()==False):
+			try:
+				print 'START TIMER'
+				self.timeout_thread = threading.Thread(target=self.start_timer_process, args=(self.timeout,))
+				self.timeout_thread.start()
+			except:
+				print 'Trouble with t1 synchronizer'
+
+						
+		
+	def start_timer_process(self,timeout):
+		self.cancelTimer = 0
+		
+		timeout = timeout*10
 		while timeout > 0:
 			# correct code entered
 			if self.cancelTimer:
@@ -62,13 +79,16 @@ class Receive():
 			else:
 				print(timeout)
 				timeout -=1
-				time.sleep(1)
+
+				# need a small time otherwise it takes too long to stop the timer
+				time.sleep(0.1)
 
 		# send alerts
 		if(self.cancelTimer == 0):
 			self.alert()
 
 	def stop_timer(self):
+		print 'STOP TIMER'
 		self.cancelTimer = 1
 
 	def alert(self):
