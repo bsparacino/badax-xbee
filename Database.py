@@ -2,7 +2,7 @@
 import MySQLdb
 import MySQLdb.cursors
 
-class Login:
+class Database:
 
 	def __init__(self):  
 		self.con = MySQLdb.connect(host="localhost", user="root", passwd="badax", db="badax", cursorclass=MySQLdb.cursors.DictCursor)

@@ -12,13 +12,9 @@ import string
 
 class Receive():	
 
-	def __init__(self):
-
+	def trip_sensor(self,sensorId):
 		self.cancelTimer = 0
-		self.timeout = 5
-
-		sensorId = '123aavvbb'
-		sensorId = '0013A2004092D86A'
+		self.timeout = 10
 
 		con = MySQLdb.connect(host="localhost", user="root", passwd="badax", db="badax", cursorclass=MySQLdb.cursors.DictCursor)
 		cur = con.cursor()
@@ -71,6 +67,9 @@ class Receive():
 		# send alerts
 		if(self.cancelTimer == 0):
 			self.alert()
+
+	def stop_timer(self):
+		self.cancelTimer = 1
 
 	def alert(self):
 		print 'sending alerts'

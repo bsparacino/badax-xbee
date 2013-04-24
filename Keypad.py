@@ -4,7 +4,7 @@ from RaspberryPi import RaspberryPi
 from LCD import LCD
 from Buzzer import Buzzer
 from time import sleep
-from Login import Login
+from Database import Database
 
 class Keypad:
   
@@ -43,7 +43,7 @@ class Keypad:
 
     self.buzzer = Buzzer()
     self.lcd = LCD()
-    self.login = database
+    self.database = database
 
     self.setup_callbacks()
     self.loop()
@@ -69,7 +69,7 @@ class Keypad:
         self.password = ''
       elif(char == '#' and self.typePassword == 1):
         self.typePassword = 0
-        user = self.login.check_login(self.password)
+        user = self.database.check_login(self.password)
         sleep(0.5)
         self.lcd.clear()
         self.lcd.message(user)

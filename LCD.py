@@ -200,7 +200,6 @@ if __name__ == '__main__':
     GPIO.setmode(GPIO.BOARD)
     LCD = LCD()
     
-    
     LCD.noCursor()
     LCD.message('CATS \nARE CUTE')
     sleep(1)
@@ -232,4 +231,3 @@ if __name__ == '__main__':
 		
   except KeyboardInterrupt:
     GPIO.cleanup()
-

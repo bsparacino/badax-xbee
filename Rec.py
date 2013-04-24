@@ -83,10 +83,13 @@ def print_data(data):
 
         if 'dio-1' in data['samples'][0]:
             samples = data['samples'][0]['dio-1']
-            print 'Sensor:',samples
-            buzzer.beep(659, 125)
-            if(samples == False):
-                buzzer.storm2()
+            print 'Sensor:',samples            
+            if(samples == True):
+                #buzzer.storm2()
+                buzzer.beep(800, 25)
+            elif(samples == False):
+                buzzer.beep(659, 125)
+
             
     if 'parameter' in data:
         if 'status' in data['parameter']:
@@ -120,14 +123,7 @@ def print_data(data):
         if 'manufacturer' in data['parameter']:
             manufacturer = ByteToHex( data['parameter']['manufacturer'])
             print 'manufacturer: ', manufacturer
-                               
-        #MY = parameter[:4]
-        #ADDR = parameter[4:20]
-        #NAME = parameter[20:36].decode("hex")
-        #print 'MY:', MY
-        #print 'ADDR:', ADDR
-        #print 'NAME:',NAME
-        #print parameter[36:]
+
     print '\n *****************************'
     
 #------------------------------------------------------------------------------- 
