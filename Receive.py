@@ -4,73 +4,99 @@ import MySQLdb.cursors
 import time
 import threading
 import thread
+from Buzzer import Buzzer
+from twilio.rest import TwilioRestClient
+import smtplib
+from email.mime.text import MIMEText
+import string
 
-class Receive():
+class Receive():	
 
 	def __init__(self):
 
 		self.cancelTimer = 0
+		self.timeout = 5
 
 		sensorId = '123aavvbb'
-		sensorId = 'abc123'
+		sensorId = '0013A2004092D86A'
 
 		con = MySQLdb.connect(host="localhost", user="root", passwd="badax", db="badax", cursorclass=MySQLdb.cursors.DictCursor)
 		cur = con.cursor()
 		cur.execute("SELECT sensor_types.title AS type,sensors.title AS title,sensors.status FROM sensors,sensor_types WHERE sensors.serial='"+sensorId+"' AND sensors.type=sensor_types.id")
 
 		sensor = cur.fetchone()
-		if(sensor['status']):
+		if(sensor and sensor['status']):
 			print 'tripped sensor: '+sensor['title']
-
-			if(sensor['type'] == 'door'):
+			print sensor['type'] 
+			if(sensor['type'] == 'Door'):
 				print 'sensor type: Door'
 
-				t = threading.Thread(target=self.start_timer, args=(5,))
+				t = threading.Thread(target=self.start_timer, args=(self.timeout,))
 				t.start()
 				#self.start_timer(5)
 				print 'yay'
 
-				time.sleep(2)
-				print 'boo'
+				#time.sleep(5)
+				# correct code entered, cancel the timer
 				#self.cancelTimer = 1
 
-
-				# wait 60 seconds for successful login, then sound alarm
-				#timer = 10
-				#while timer > 0:
-				#	timer -= 1
-				#	print timer
-				#	time.sleep(1)
-
-				#print 'BEEP'
-
-			elif(sensor['type'] == 'window'):
+			elif(sensor['type'] == 'Window'):
 				print 'sensor type: Window'
 				# sound alarm
 				print 'BEEP'
 
-			elif(sensor['type'] == 'room'):
+			elif(sensor['type'] == 'Room'):
 				print 'sensor type: Room'
 				# sound alarm
 				print 'BEEP'
-
+		else:
+			print 'sensor not found'
 
 		cur.close ()
 		con.close ()
 
-	
-
 	def start_timer(self,timeout):
 		self.cancelTimer = 0
-		print "starting timer"
 
 		while timeout > 0:
+			# correct code entered
 			if self.cancelTimer:
 				break
+			# sleep
 			else:
 				print(timeout)
 				timeout -=1
 				time.sleep(1)
 
+		# send alerts
 		if(self.cancelTimer == 0):
-			print "BEEEEEP"
+			self.alert()
+
+	def alert(self):
+		print 'sending alerts'
+
+		buzzer = Buzzer()
+		buzzer.beep(659, 125)
+
+		#client = TwilioRestClient("ACc4cb12c713e1483cb661100848c562b8", "c829b7d4169070c10e5121f0a55180af")
+		#message = client.sms.messages.create(to="+15856940209", from_="+15855981936", body="BADAX Test")
+
+		SUBJECT = "BADAX Alerts"
+		TO = "bsparacino@gmail.com"
+		FROM = "BADAX@gmail.com"
+		text = "testing alerts 123"
+		BODY = string.join((
+		        "From: %s" % FROM,
+		        "To: %s" % TO,
+		        "Subject: %s" % SUBJECT ,
+		        "",
+		        text
+		        ), "\r\n")
+		mailServer = smtplib.SMTP('smtp.gmail.com')
+		mailServer.starttls()
+		mailServer.login('badaxalerts@gmail.com', 'sourfarm39')
+		mailServer.sendmail(FROM, [TO], BODY)
+		mailServer.quit()
+
+		
+		
