@@ -13,7 +13,7 @@ import string
 class SensorProcess():
 
 	def __init__(self):
-		self.timeout = 20
+		self.timeout = 60
 		self.timeout_thread = threading.Thread(target=self.start_timer_process, args=(self.timeout,))
 
 	def trip_sensor(self,sensorId):
@@ -55,7 +55,7 @@ class SensorProcess():
 		con.close ()
 
 	def start_timer(self):
-		print 'trying to start timer'
+		print 'trying to start timer'		
 
 		if(self.timeout_thread.isAlive()==False):
 			try:
@@ -72,6 +72,11 @@ class SensorProcess():
 		
 		timeout = timeout*10
 		while timeout > 0:
+
+			if(timeout % 4 == 0):
+				buzzer = Buzzer()
+				buzzer.beep(800, 25)
+
 			# correct code entered
 			if self.cancelTimer:
 				break

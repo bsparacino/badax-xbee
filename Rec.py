@@ -18,6 +18,7 @@ class Rec():
         self.database = database;
         self.sp = sensorProcess
 
+    def start(self):
         #------------------------------------------------------------------------------- 
         # Open serial port
         ser = serial.Serial('/dev/ttyAMA0', 9600)
@@ -41,7 +42,6 @@ class Rec():
         while True:
             try: 
                 
-              
                 #xbee.tx(dest_addr=pan,dest_addr_long=Destination, data='Hello World')
                 #xbee.remote_at(dest_addr=MY,dest_addr_long=ADR, command='MY',parameter=None)
                 #time.sleep(5) \x
@@ -153,12 +153,12 @@ class Rec():
                 print 'Sensor:',samples            
                 if(samples == True):
                     #buzzer.storm2()
-                    self.buzzer.beep(800, 25)
+                    #self.buzzer.beep(800, 25)
                     self.sp.start_timer()
 
                 elif(samples == False):                    
                     self.buzzer.beep(659, 125)
-                    self.sp.stop_timer()
+                    #self.sp.stop_timer()
 
                 
         if 'parameter' in data:

@@ -6,21 +6,25 @@ from Buzzer import Buzzer
 from LCD import LCD
 from Database import Database
 from Rec import Rec
+import threading
+import thread
  
 GPIO.setmode(GPIO.BOARD)
 DEBUG = 0
 
 class Buttons:
 
-    def __init__(self, database, receive, sensorProcess):
+    def __init__(self, database, sensorProcess):
 
         self.database = database
         self.buzzer = Buzzer()
-        self.receive = receive
         self.sp = sensorProcess
         self.password = ''
         self.typePassword = 0
-        self.start()
+
+        #buttons_thread = threading.Thread(target=self.start,)
+        #buttons_thread.start()
+        #self.start()
      
     # read SPI data from MCP3008 chip, 8 possible adc's (0 thru 7)
     def readadc(self, adcnum, clockpin, mosipin, misopin, cspin):
@@ -158,6 +162,11 @@ class Buttons:
                         lcd.noBlink()
                         self.typePassword = 0
                         user = self.database.check_login(self.password)
+                        print user
+
+                        if(user != 'Invalid Code'):
+                            self.sp.stop_timer()
+
                         time.sleep(0.5)
                         lcd.clear()
                         lcd.message(user)
@@ -165,13 +174,11 @@ class Buttons:
                         time.sleep(5)
                         lcd.clear()
                         lcd.Blink()
-
-                        self.receive.stop_timer()
-
                     if(self.password == '1111'):
-                        self.buzzer.mario()
-                        time.sleep(3)
-                        lcd.clear()
+                        print 'play mario'
+                        mario_thread = threading.Thread(target=self.play_song(),)
+                        print 'die mario'
+                        #mario_thread.start()
                     elif(self.typePassword == 1):
                         if(number != '*'):
                             self.password += number
@@ -180,3 +187,7 @@ class Buttons:
         except KeyboardInterrupt:
               GPIO.cleanup()
               print "\nKill"
+
+    def play_song(self):
+        print 'boo'
+        #self.buzzer.mario()

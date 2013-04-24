@@ -74,9 +74,6 @@ class Keypad:
         self.lcd.clear()
         self.lcd.message(user)
         self.message = ''
-
-        if(self.password == '1111'):
-          self.buzzer.mario()
         
         sleep(3)
         self.lcd.clear()
