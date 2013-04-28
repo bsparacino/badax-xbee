@@ -7,7 +7,9 @@ from Buzzer import Buzzer
  
 # set up the STUFF
 GPIO.setmode(GPIO.BOARD)
-MOTIONPIN = RaspberryPi.GPIO6
+MOTIONPIN = RaspberryPi.GPIO5
+PWR   = RaspberryPi.GPIO6#######
+GPIO.setup(PWR, GPIO.OUT)########
 GPIO.setup(MOTIONPIN, GPIO.IN)
 buzzer = Buzzer()
 
@@ -19,15 +21,17 @@ if True:
             if not GPIO.input(MOTIONPIN):
                 motion = clock()
                 print "MOTION"
-                buzzer.beep(659, 125)
+                GPIO.output(PWR, True)
                 while not GPIO.input(MOTIONPIN):
-                    sleep(5)
+                    sleep(2)
                        
 		    
-            if (clock() - motion) > 1:
+            if (clock() - motion) > .5:
                 print 'TIMEOUT'
+                GPIO.output(PWR, False)
+                sleep(5)
                 while GPIO.input(MOTIONPIN):
-                    sleep(.5)
+                    sleep(2)
                     
             sleep(0.005)
             print clock() - motion

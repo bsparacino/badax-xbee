@@ -5,6 +5,7 @@ import time
 import threading
 import thread
 from Buzzer import Buzzer
+from Database import Database
 from twilio.rest import TwilioRestClient
 import smtplib
 from email.mime.text import MIMEText
@@ -21,7 +22,7 @@ class SensorProcess():
 
 		con = MySQLdb.connect(host="localhost", user="root", passwd="badax", db="badax", cursorclass=MySQLdb.cursors.DictCursor)
 		cur = con.cursor()
-		cur.execute("SELECT sensor_types.title AS type,sensors.title AS title,sensors.status FROM sensors,sensor_types WHERE sensors.serial='"+sensorId+"' AND sensors.type=sensor_types.id")
+		cur.execute("SELECT sensor_types.title AS type,sensors.title AS title,sensors.status FROM sensors,sensor_types WHERE sensors.serial='"+sensorId+"' AND sensors.type=sensor_types.id AND sensors.status='1' ")
 
 		sensor = cur.fetchone()
 		if(sensor and sensor['status']):
@@ -102,25 +103,31 @@ class SensorProcess():
 		buzzer = Buzzer()
 		buzzer.beep(659, 125)
 
-		#client = TwilioRestClient("ACc4cb12c713e1483cb661100848c562b8", "c829b7d4169070c10e5121f0a55180af")
-		#message = client.sms.messages.create(to="+15856940209", from_="+15855981936", body="BADAX Test")
+		database = Database()
+		users = database.get_users()
 
-		SUBJECT = "BADAX Alerts"
-		TO = "bsparacino@gmail.com"
-		FROM = "BADAX@gmail.com"
-		text = "testing alerts 123"
-		BODY = string.join((
-		        "From: %s" % FROM,
-		        "To: %s" % TO,
-		        "Subject: %s" % SUBJECT ,
-		        "",
-		        text
-		        ), "\r\n")
-		mailServer = smtplib.SMTP('smtp.gmail.com')
-		mailServer.starttls()
-		mailServer.login('badaxalerts@gmail.com', 'sourfarm39')
-		mailServer.sendmail(FROM, [TO], BODY)
-		mailServer.quit()
+		client = TwilioRestClient("ACc4cb12c713e1483cb661100848c562b8", "c829b7d4169070c10e5121f0a55180af")
+
+		for user in users:
+			
+			message = client.sms.messages.create(to=user['phone'], from_="+15855981936", body="BADAX Test")
+
+			SUBJECT = "BADAX Alerts"
+			TO = user['email']
+			FROM = "BADAX@gmail.com"
+			text = "testing alerts 123"
+			BODY = string.join((
+			        "From: %s" % FROM,
+			        "To: %s" % TO,
+			        "Subject: %s" % SUBJECT ,
+			        "",
+			        text
+			        ), "\r\n")
+			mailServer = smtplib.SMTP('smtp.gmail.com')
+			mailServer.starttls()
+			mailServer.login('badaxalerts@gmail.com', 'sourfarm39')
+			mailServer.sendmail(FROM, [TO], BODY)
+			mailServer.quit()
 
 		
 		

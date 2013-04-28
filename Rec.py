@@ -35,11 +35,8 @@ class Rec():
         #print xbee.api_responses
         #print '\n *****************************'
 
-        MY = self.HexToByte('7Az3')
-        ADR = self.HexToByte('0013A2004092D842')
-
-        #0013A2004092D842 sensor1
-        #0013A2004092D86A sensor2        
+        MY = self.HexToByte('0B41')
+        ADR = self.HexToByte('0013A2004092D86A')
 
         once = 1
         while True:

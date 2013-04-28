@@ -23,5 +23,11 @@ class Database:
 		cur.close()
 		return u
 
+	def get_users(self):
+		cur = self.con.cursor()
+		cur.execute("SELECT first_name, last_name, email, phone FROM users")
+		users = cur.fetchall()
+		return users
+
 	def cleanup(self):
 		self.con.close()

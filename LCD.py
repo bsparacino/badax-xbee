@@ -52,6 +52,7 @@ class LCD:
   LCD_5x8DOTS               = 0x00
 
   def __init__(self):
+    self.PWR   = RaspberryPi.GPIO6
     self.rs    = RaspberryPi.GPIO7
     self.e     = RaspberryPi.SPI_MOSI
     self.db    = [RaspberryPi.SPI_MISO,
@@ -61,6 +62,7 @@ class LCD:
 
     GPIO.setup(self.rs, GPIO.OUT)
     GPIO.setup(self.e,  GPIO.OUT)
+    GPIO.setup(self.PWR, GPIO.OUT)
     for pin in self.db:
       GPIO.setup(pin, GPIO.OUT)
 
@@ -138,6 +140,14 @@ class LCD:
 
         self.cmd(self.LCD_SETDDRAMADDR | (col + self.row_offsets[row]))
         
+  def displayOff(self): 
+      """ Turn the display off """
+      GPIO.output(self.PWR, False)
+  
+  def displayOn(self):
+      """ Turn the display on  """
+      GPIO.output(self.PWR, True)
+      
   def noDisplay(self): 
       """ Turn the display off (quickly) """
 
@@ -227,6 +237,12 @@ if __name__ == '__main__':
     LCD.noBlink()
 
     while True:
+      print 'off'
+      LCD.displayOff()
+      sleep(3)
+      print'on'
+      LCD.displayOn()
+      sleep(3)
       pass
 		
   except KeyboardInterrupt:

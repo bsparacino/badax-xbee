@@ -178,7 +178,7 @@ class Buttons:
                         print 'play mario'
                         mario_thread = threading.Thread(target=self.play_song(),)
                         print 'die mario'
-                        #mario_thread.start()
+                        mario_thread.start()
                     elif(self.typePassword == 1):
                         if(number != '*'):
                             self.password += number
@@ -190,4 +190,4 @@ class Buttons:
 
     def play_song(self):
         print 'boo'
-        #self.buzzer.mario()
+        self.buzzer.mario()
