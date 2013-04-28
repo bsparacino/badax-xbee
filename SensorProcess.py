@@ -24,6 +24,11 @@ class SensorProcess():
 		cur = con.cursor()
 		cur.execute("SELECT sensor_types.title AS type,sensors.title AS title,sensors.status FROM sensors,sensor_types WHERE sensors.serial='"+sensorId+"' AND sensors.type=sensor_types.id AND sensors.status='1' ")
 
+		message = "Sensor Tripped: "+sensor['title']
+		cur2 = con.cursor()
+		cur2.execute("INSERT INTO logs (message) VALUES ('"+message+"')")
+		con.commit()
+
 		sensor = cur.fetchone()
 		if(sensor and sensor['status']):
 			print 'tripped sensor: '+sensor['title']
