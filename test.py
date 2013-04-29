@@ -6,6 +6,7 @@ from buttons import Buttons
 from LCD import LCD
 from Rec import Rec
 from LED import LED
+from motion import motion
 from SensorProcess import SensorProcess
 import threading
 import thread
@@ -19,7 +20,7 @@ if __name__ == '__main__':
     GPIO.setmode(GPIO.BOARD)
     #buzzer = Buzzer()
 
-    led = LED()    
+    led = LED() 
 
     sp = SensorProcess(led)
     database = Database()
@@ -31,6 +32,10 @@ if __name__ == '__main__':
     receive = Rec(database, sp);
     receive_thread = threading.Thread(target=receive.start,)
     receive_thread.start()
+
+    motion = motion()
+    motion_thread = threading.Thread(target=motion.start,)
+    motion_thread.start()
     
     while True:
       pass
