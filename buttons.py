@@ -65,10 +65,11 @@ class Buttons:
 
         # change these as desired - they're the pins connected from the
         # SPI port on the ADC to the Cobbler
-        SPICLK = RaspberryPi.GPIO0
-        SPIMISO = RaspberryPi.GPIO1
-        SPIMOSI = RaspberryPi.GPIO2
-        SPICS = RaspberryPi.GPIO3
+        SPICLK = RaspberryPi.SPI_CE1          #CLK
+        SPIMISO = RaspberryPi.SPI_CE0        #DOUT
+        SPIMOSI = RaspberryPi.SPI_SCLK        #DIN
+        SPICS = RaspberryPi.SPI_MISO        #CS
+
          
         # set up the SPI interface pins
         GPIO.setup(SPIMOSI, GPIO.OUT)

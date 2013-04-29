@@ -7,7 +7,7 @@ from Buzzer import Buzzer
  
 # set up the STUFF
 GPIO.setmode(GPIO.BOARD)
-MOTIONPIN = RaspberryPi.GPIO5
+MOTIONPIN = RaspberryPi.SPI_MOSI
 PWR   = RaspberryPi.GPIO6#######
 GPIO.setup(PWR, GPIO.OUT)########
 GPIO.setup(MOTIONPIN, GPIO.IN)

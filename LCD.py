@@ -53,12 +53,13 @@ class LCD:
 
   def __init__(self):
     self.PWR   = RaspberryPi.GPIO6
-    self.rs    = RaspberryPi.GPIO7
-    self.e     = RaspberryPi.SPI_MOSI
-    self.db    = [RaspberryPi.SPI_MISO,
-                  RaspberryPi.SPI_SCLK,
-                  RaspberryPi.SPI_CE0,
-                  RaspberryPi.SPI_CE1]
+    self.rs    = RaspberryPi.GPIO5
+    self.e     = RaspberryPi.GPIO4
+    self.db    = [RaspberryPi.GPIO3,
+                 RaspberryPi.GPIO2,
+                  RaspberryPi.GPIO1,
+                  RaspberryPi.GPIO0]
+
 
     GPIO.setup(self.rs, GPIO.OUT)
     GPIO.setup(self.e,  GPIO.OUT)
@@ -82,11 +83,12 @@ class LCD:
     self.displaymode =  self.LCD_ENTRYLEFT | self.LCD_ENTRYSHIFTDECREMENT
     self.cmd(self.LCD_ENTRYMODESET | self.displaymode)
     
-    self.clear()
+    
     self.begin(15,2)
     
   def begin(self, cols, lines):
-
+      self.displayOn()
+      self.clear()
       if (lines > 1):
               self.numlines = lines
               self.displayfunction |= self.LCD_2LINE

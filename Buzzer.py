@@ -7,7 +7,7 @@ from RaspberryPi import RaspberryPi
 class Buzzer:
 
     def __init__(self):
-        self.pins = [RaspberryPi.SDA, RaspberryPi.SCL]
+        self.pins = [RaspberryPi.SDA, RaspberryPi.GPIO7]
 
         for pin in self.pins:
             GPIO.setup(pin, GPIO.OUT)
@@ -28,10 +28,10 @@ class Buzzer:
 
         for i in range(0, rep):
             GPIO.output(RaspberryPi.SDA, True)
-            GPIO.output(RaspberryPi.SCL, False)
+            GPIO.output(RaspberryPi.GPIO7, False)
             time.sleep(sleep_time)
             GPIO.output(RaspberryPi.SDA, False)
-            GPIO.output(RaspberryPi.SCL, True)
+            GPIO.output(RaspberryPi.GPIO7, True)
             time.sleep(sleep_time)
 
         #time.sleep(0.05)

@@ -25,9 +25,9 @@ if __name__ == '__main__':
     buttons_thread = threading.Thread(target=buttons.start,)
     buttons_thread.start()
 
-    receive = Rec(database, sp);
-    receive_thread = threading.Thread(target=receive.start,)
-    receive_thread.start()
+    #receive = Rec(database, sp);
+    #receive_thread = threading.Thread(target=receive.start,)
+    #receive_thread.start()
 
 
 
