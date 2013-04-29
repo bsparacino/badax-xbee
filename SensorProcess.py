@@ -16,7 +16,7 @@ class SensorProcess():
 
 	def __init__(self, led):
 		self.database = database = Database()
-		self.timeout = 15
+		self.timeout = 60
 		self.timeout_thread = threading.Thread(target=self.start_timer_process, args=(self.timeout,))
 		self.soundingAlarm = 0
 		self.buzzer = Buzzer()
