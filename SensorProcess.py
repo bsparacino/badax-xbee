@@ -125,7 +125,7 @@ class SensorProcess():
 					continue;
 
 				message = self.sensor['title']+' Sensor Tripped'
-				#client.sms.messages.create(to=user['phone'], from_="+15855981936", body=message)
+				client.sms.messages.create(to=user['phone'], from_="+15855981936", body=message)
 
 				SUBJECT = "BADAX Alerts"
 				TO = user['email']
