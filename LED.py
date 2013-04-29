@@ -2,38 +2,58 @@
 import RPi.GPIO as GPIO
 from RaspberryPi import RaspberryPi
 from time import sleep
- 
-# set up the STUFF
-GPIO.setmode(GPIO.BOARD)
-LED = RaspberryPi.SCL
-GPIO.setup(LED,GPIO.OUT)
+import threading
+import thread
 
+class LED:
 
-if True:
-    try:
-        while True:
+    def __init__(self):
+        # set up the STUFF
+        GPIO.setmode(GPIO.BOARD)
+        self.LED = RaspberryPi.SCL
+        GPIO.setup(self.LED,GPIO.OUT)
+        GPIO.output(self.LED, False)
 
-            GPIO.output(LED, True)
-            sleep(.17)
-            GPIO.output(LED, False)
-            sleep(.17)
-            
-            GPIO.output(LED, True)
-            sleep(.17)
-            GPIO.output(LED, False)
-            sleep(.17)
-            
-            GPIO.output(LED, True)
-            sleep(.17)
-            GPIO.output(LED, False)
-            sleep(.17)
-            
-            GPIO.output(LED, True)
-            sleep(.17)
-            GPIO.output(LED, False)
-            sleep(2)
-                
-            
-    except KeyboardInterrupt:
-        GPIO.output(LED, False)
-        GPIO.cleanup()
+        self.show_status_light = 1
+
+    def status_light(self):
+        if True:
+            try:
+                while True:
+
+                    if(self.show_status_light == 1):
+                        GPIO.output(self.LED, True)
+                        sleep(.17)
+                        GPIO.output(self.LED, False)
+                        sleep(.17)
+                        
+                        GPIO.output(self.LED, True)
+                        sleep(.17)
+                        GPIO.output(self.LED, False)
+                        sleep(.17)
+                        
+                        GPIO.output(self.LED, True)
+                        sleep(.17)
+                        GPIO.output(self.LED, False)
+                        sleep(.17)
+                        
+                        GPIO.output(self.LED, True)
+                        sleep(.17)
+                        GPIO.output(self.LED, False)
+
+                    sleep(2)
+                        
+                    
+            except KeyboardInterrupt:
+                GPIO.output(LED, False)
+                GPIO.cleanup()
+
+    def beep(self):
+        self.beep_proc_thread = threading.Thread(target=self.beep_process)
+        self.beep_proc_thread.start()
+
+    def beep_process(self):
+        GPIO.output(self.LED, True)
+        sleep(.17)
+        GPIO.output(self.LED, False)
+        sleep(.17)

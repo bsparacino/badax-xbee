@@ -2,12 +2,13 @@
 import time
 import RPi.GPIO as GPIO
 from RaspberryPi import RaspberryPi
-
+from LED import LED
 
 class Buzzer:
 
     def __init__(self):
         self.pins = [RaspberryPi.SDA, RaspberryPi.GPIO7]
+        self.led = LED()
 
         for pin in self.pins:
             GPIO.setup(pin, GPIO.OUT)
@@ -31,8 +32,10 @@ class Buzzer:
             GPIO.output(RaspberryPi.GPIO7, False)
             time.sleep(sleep_time)
             GPIO.output(RaspberryPi.SDA, False)
-            GPIO.output(RaspberryPi.GPIO7, True)
+            GPIO.output(RaspberryPi.GPIO7, True)            
             time.sleep(sleep_time)
+            
+        self.led.beep()            
 
         #time.sleep(0.05)
 

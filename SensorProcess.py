@@ -14,24 +14,30 @@ import sys
 
 class SensorProcess():
 
-	def __init__(self):
+	def __init__(self, led):
 		self.database = database = Database()
 		self.timeout = 15
 		self.timeout_thread = threading.Thread(target=self.start_timer_process, args=(self.timeout,))
 		self.soundingAlarm = 0
 		self.buzzer = Buzzer()
+		self.led = led
+		self.led_status_thread = threading.Thread(target=self.led.status_light)
+		self.led_status_thread.start()
 
 	def trip_sensor(self,sensorId):
 		self.cancelTimer = 0
 
 		status = self.database.system_status()
-		print 'system status '+status		
+		print 'system status '+status
 
 		if(status=='1'):
-			self.buzzer.beep(659, 125)
+
 			sensor = self.database.get_sensor(sensorId)			
 
 			if(sensor and sensor['status']):
+
+				if(self.soundingAlarm == 0):
+					self.buzzer.beep(659, 125)
 
 				message = "Sensor Tripped: "+sensor['title']
 				self.database.log(message)
@@ -56,7 +62,9 @@ class SensorProcess():
 			else:
 				print 'sensor not found'
 		else:
-			self.buzzer.beep(800, 40)
+			self.buzzer.beep(800, 20)
+			time.sleep(0.1)
+			self.buzzer.beep(800, 20)
 
 	def start_timer(self):
 		print 'trying to start timer'		
@@ -67,9 +75,7 @@ class SensorProcess():
 				self.timeout_thread = threading.Thread(target=self.start_timer_process, args=(self.timeout,))
 				self.timeout_thread.start()
 			except:
-				print 'Trouble with t1 synchronizer'
-
-						
+				print 'Trouble with t1 synchronizer'				
 		
 	def start_timer_process(self,timeout):
 		self.cancelTimer = 0
@@ -134,11 +140,9 @@ class SensorProcess():
 			mailServer.quit()
 
 	def sound_alarm(self):
+		self.led.show_status_light = 0
 		if(self.soundingAlarm == 0):
 			self.soundingAlarm = 1
 			while(self.soundingAlarm):
 				self.buzzer.beep(800, 100)
 				time.sleep(0.1)
-
-		
-		

@@ -1,7 +1,6 @@
 #! /usr/bin/python
 
 from xbee import ZigBee
-from Buzzer import Buzzer
 import RPi.GPIO as GPIO
 from RaspberryPi import RaspberryPi
 import time
@@ -22,7 +21,6 @@ class Rec():
         #------------------------------------------------------------------------------- 
         # Open serial port
         ser = serial.Serial('/dev/ttyAMA0', 9600)
-        self.buzzer = Buzzer()
 
         # Create API object
         xbee = ZigBee(ser,callback = self.print_data ,escaped=True)

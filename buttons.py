@@ -14,13 +14,14 @@ DEBUG = 0
 
 class Buttons:
 
-    def __init__(self, database, sensorProcess):
+    def __init__(self, database, sensorProcess, led):
 
         self.database = database
         self.buzzer = Buzzer()
         self.sp = sensorProcess
         self.password = ''
         self.typePassword = 0
+        self.led = led
 
         #buttons_thread = threading.Thread(target=self.start,)
         #buttons_thread.start()
@@ -166,6 +167,8 @@ class Buttons:
                         print user
 
                         if(user != 'Invalid Code'):
+                            self.led.show_status_light = 1
+                            
                             self.sp.stop_timer()
                             self.sp.soundingAlarm = 0
                             self.database.system_disarm()
