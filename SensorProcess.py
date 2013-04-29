@@ -23,6 +23,7 @@ class SensorProcess():
 		self.led = led
 		self.led_status_thread = threading.Thread(target=self.led.status_light)
 		self.led_status_thread.start()
+		self.sensor = None
 
 	def trip_sensor(self,sensorId):
 		self.cancelTimer = 0
@@ -32,7 +33,8 @@ class SensorProcess():
 
 		if(status=='1'):
 
-			sensor = self.database.get_sensor(sensorId)			
+			sensor = self.database.get_sensor(sensorId)
+			self.sensor = sensor	
 
 			if(sensor and sensor['status']):
 
@@ -108,36 +110,38 @@ class SensorProcess():
 	def alert(self):
 		print 'sending alerts'
 
-		self.alarmSound_thread = threading.Thread(target=self.sound_alarm)
-		self.alarmSound_thread.start()
+		if(self.soundingAlarm == 0):
 
-		users = self.database.get_users()		
+			self.alarmSound_thread = threading.Thread(target=self.sound_alarm)
+			self.alarmSound_thread.start()
 
-		client = TwilioRestClient("ACc4cb12c713e1483cb661100848c562b8", "c829b7d4169070c10e5121f0a55180af")
+			users = self.database.get_users()		
 
-		for user in users:
-			
-			if(user['alert'] == 0):
-				continue;
+			client = TwilioRestClient("ACc4cb12c713e1483cb661100848c562b8", "c829b7d4169070c10e5121f0a55180af")
 
-			#message = client.sms.messages.create(to=user['phone'], from_="+15855981936", body="BADAX Test")
+			for user in users:
+				
+				if(user['alert'] == 0):
+					continue;
 
-			SUBJECT = "BADAX Alerts"
-			TO = user['email']
-			FROM = "BADAX@gmail.com"
-			text = "testing alerts 123"
-			BODY = string.join((
-			        "From: %s" % FROM,
-			        "To: %s" % TO,
-			        "Subject: %s" % SUBJECT ,
-			        "",
-			        text
-			        ), "\r\n")
-			mailServer = smtplib.SMTP('smtp.gmail.com')
-			mailServer.starttls()
-			mailServer.login('badaxalerts@gmail.com', 'sourfarm39')
-			mailServer.sendmail(FROM, [TO], BODY)
-			mailServer.quit()
+				message = self.sensor['title']+' Sensor Tripped'
+				#client.sms.messages.create(to=user['phone'], from_="+15855981936", body=message)
+
+				SUBJECT = "BADAX Alerts"
+				TO = user['email']
+				FROM = "BADAX@gmail.com"
+				BODY = string.join((
+				        "From: %s" % FROM,
+				        "To: %s" % TO,
+				        "Subject: %s" % SUBJECT ,
+				        "",
+				        message
+				        ), "\r\n")
+				mailServer = smtplib.SMTP('smtp.gmail.com')
+				mailServer.starttls()
+				mailServer.login('badaxalerts@gmail.com', 'sourfarm39')
+				mailServer.sendmail(FROM, [TO], BODY)
+				mailServer.quit()
 
 	def sound_alarm(self):
 		self.led.show_status_light = 0
