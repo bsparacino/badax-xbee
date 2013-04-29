@@ -166,24 +166,33 @@ class Buttons:
                         user = self.database.check_login(self.password)
                         print user
 
+                        sleep_time = 1
+
                         if(user != 'Invalid Code'):
+                            sleep_time = 5
                             self.led.show_status_light = 1
                             
-                            self.sp.stop_timer()
-                            self.sp.soundingAlarm = 0
-                            self.database.system_disarm()
-                            message = 'User '+user['first_name']+' '+user['last_name']+' disarmed the system'
-                            print message
-                            self.database.log(message)
+                            system_status = self.database.system_status()
+                            if(system_status == '1'):
+                                self.sp.stop_timer()
+                                self.sp.soundingAlarm = 0
+                                self.database.system_disarm()
+                                message = 'User '+user['first_name']+' '+user['last_name']+' disarmed the system'
+                                print message
+                                self.database.log(message)
 
-                            print user['first_name']+' '+user['last_name']
-                            user = 'Login Successful:\n'+user['first_name']+' '+user['last_name']
+                                print user['first_name']+' '+user['last_name']
+                                user = 'Login Successful:\n'+user['first_name']+' '+user['last_name']
+                            else:
+                                self.database.system_arm()
+                                user = user['first_name']+' '+user['last_name']+'\nArmed The System'
+                                self.database.log(user)
 
                         time.sleep(0.5)
                         lcd.clear()
                         lcd.message(user)
                         self.message = ''
-                        time.sleep(5)
+                        time.sleep(sleep_time)
                         lcd.clear()
                         lcd.Blink()
                     if(self.password == '1111'):
