@@ -10,55 +10,62 @@ from twilio.rest import TwilioRestClient
 import smtplib
 from email.mime.text import MIMEText
 import string
+import sys
 
 class SensorProcess():
 
 	def __init__(self):
-		self.timeout = 60
+		self.database = database = Database()
+		self.timeout = 15
 		self.timeout_thread = threading.Thread(target=self.start_timer_process, args=(self.timeout,))
+		self.soundingAlarm = 0
 
 	def trip_sensor(self,sensorId):
-		self.cancelTimer = 0		
+		self.cancelTimer = 0
 
-		con = MySQLdb.connect(host="localhost", user="root", passwd="badax", db="badax", cursorclass=MySQLdb.cursors.DictCursor)
-		cur = con.cursor()
-		cur.execute("SELECT sensor_types.title AS type,sensors.title AS title,sensors.status FROM sensors,sensor_types WHERE sensors.serial='"+sensorId+"' AND sensors.type=sensor_types.id AND sensors.status='1' ")
+		status = self.database.system_status()
+		print 'system status '+status
 
-		message = "Sensor Tripped: "+sensor['title']
-		cur2 = con.cursor()
-		cur2.execute("INSERT INTO logs (message) VALUES ('"+message+"')")
-		con.commit()
+		if(status=='1'):
+			sensor = self.database.get_sensor(sensorId)			
 
-		sensor = cur.fetchone()
-		if(sensor and sensor['status']):
-			print 'tripped sensor: '+sensor['title']
-			print sensor['type'] 
-			if(sensor['type'] == 'Door'):
-				print 'sensor type: Door'
+			if(sensor and sensor['status']):
 
-				#t = threading.Thread(target=self.start_timer, args=(self.timeout,))
-				#t.start()
-				#self.start_timer(5)
-				print 'yay'
+				message = "Sensor Tripped: "+sensor['title']
+				self.database.log(message)
 
-				#time.sleep(5)
-				# correct code entered, cancel the timer
-				#self.cancelTimer = 1
+				print sensor
 
-			elif(sensor['type'] == 'Window'):
-				print 'sensor type: Window'
-				# sound alarm
-				print 'BEEP'
+				print 'tripped sensor: '+sensor['title']
+				print sensor['type'] 
+				if(sensor['type'] == 'Door'):
 
-			elif(sensor['type'] == 'Room'):
-				print 'sensor type: Room'
-				# sound alarm
-				print 'BEEP'
-		else:
-			print 'sensor not found'
+					self.start_timer()
 
-		cur.close ()
-		con.close ()
+					print 'sensor type: Door'
+
+					#t = threading.Thread(target=self.start_timer, args=(self.timeout,))
+					#t.start()
+					#self.start_timer(5)
+					print 'yay'
+
+					#time.sleep(5)
+					# correct code entered, cancel the timer
+					#self.cancelTimer = 1
+
+				elif(sensor['type'] == 'Window'):
+					print 'sensor type: Window'
+					# sound alarm
+					print 'BEEP'
+					self.alert()
+
+				elif(sensor['type'] == 'Room'):
+					print 'sensor type: Room'
+					# sound alarm
+					print 'BEEP'
+					self.alert()
+			else:
+				print 'sensor not found'
 
 	def start_timer(self):
 		print 'trying to start timer'		
@@ -105,16 +112,21 @@ class SensorProcess():
 	def alert(self):
 		print 'sending alerts'
 
-		buzzer = Buzzer()
-		buzzer.beep(659, 125)
+		#buzzer = Buzzer()
+		#buzzer.beep(659, 125)
 
-		database = Database()
-		users = database.get_users()
+		self.alarmSound_thread = threading.Thread(target=self.sound_alarm)
+		self.alarmSound_thread.start()
+
+		users = self.database.get_users()		
 
 		client = TwilioRestClient("ACc4cb12c713e1483cb661100848c562b8", "c829b7d4169070c10e5121f0a55180af")
 
 		for user in users:
 			
+			if(user['alert'] == 0):
+				continue;
+
 			message = client.sms.messages.create(to=user['phone'], from_="+15855981936", body="BADAX Test")
 
 			SUBJECT = "BADAX Alerts"
@@ -133,6 +145,13 @@ class SensorProcess():
 			mailServer.login('badaxalerts@gmail.com', 'sourfarm39')
 			mailServer.sendmail(FROM, [TO], BODY)
 			mailServer.quit()
+
+	def sound_alarm(self):
+		self.soundingAlarm = 1
+		buzzer = Buzzer()
+		while(self.soundingAlarm):
+			buzzer.beep(800, 100)
+			time.sleep(0.1)
 
 		
 		

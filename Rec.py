@@ -154,7 +154,10 @@ class Rec():
                 if(samples == True):
                     #buzzer.storm2()
                     #self.buzzer.beep(800, 25)
-                    self.sp.start_timer()
+                    #self.sp.start_timer()
+                    #sp.trip_sensor()
+
+                    self.sp.trip_sensor(self.ByteToHex( data['source_addr_long']))
 
                 elif(samples == False):                    
                     self.buzzer.beep(659, 125)

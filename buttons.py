@@ -167,6 +167,7 @@ class Buttons:
 
                         if(user != 'Invalid Code'):
                             self.sp.stop_timer()
+                            self.sp.soundingAlarm = 0
 
                         time.sleep(0.5)
                         lcd.clear()
