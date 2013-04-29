@@ -48,13 +48,14 @@ class Database:
 		return users
 
 	def get_sensor(self, sensorId):
-		cur = self.con.cursor()
+		cur = self.con.cursor()		
 		cur.execute("SELECT sensor_types.title AS type,sensors.title AS title,sensors.status FROM sensors,sensor_types WHERE sensors.serial='"+sensorId+"' AND sensors.type=sensor_types.id AND sensors.status='1' ")
 		sensor = cur.fetchone()
 		return sensor
 
 	def log(self, message):
 		cur = self.con.cursor()
+		message = self.con.escape_string(message)
 		cur.execute("INSERT INTO logs (message) VALUES ('"+message+"')")
 		self.con.commit()
 

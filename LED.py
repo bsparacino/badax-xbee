@@ -19,34 +19,33 @@ class LED:
     def status_light(self):
         if True:
             try:
-                while True:
 
-                    if(self.show_status_light == 1):
-                        GPIO.output(self.LED, True)
-                        sleep(.17)
-                        GPIO.output(self.LED, False)
-                        sleep(.17)
-                        
-                        GPIO.output(self.LED, True)
-                        sleep(.17)
-                        GPIO.output(self.LED, False)
-                        sleep(.17)
-                        
-                        GPIO.output(self.LED, True)
-                        sleep(.17)
-                        GPIO.output(self.LED, False)
-                        sleep(.17)
-                        
-                        GPIO.output(self.LED, True)
-                        sleep(.17)
-                        GPIO.output(self.LED, False)
-
-                    sleep(2)
-                        
-                    
+                self.status_light_thread = threading.Thread(target=self.status_light_process)
+                self.status_light_thread.start()
+                
             except KeyboardInterrupt:
                 GPIO.output(LED, False)
                 GPIO.cleanup()
+
+    def status_light_process(self):
+        while True:
+            if(self.show_status_light == 1):
+                GPIO.output(self.LED, True)
+                sleep(.17)
+                GPIO.output(self.LED, False)
+                sleep(.17)
+                GPIO.output(self.LED, True)
+                sleep(.17)
+                GPIO.output(self.LED, False)
+                sleep(.17)
+                GPIO.output(self.LED, True)
+                sleep(.17)
+                GPIO.output(self.LED, False)
+                sleep(.17)
+                GPIO.output(self.LED, True)
+                sleep(.17)
+                GPIO.output(self.LED, False)
+            sleep(2)
 
     def beep(self):
         self.beep_proc_thread = threading.Thread(target=self.beep_process)
