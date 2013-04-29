@@ -28,10 +28,6 @@ if __name__ == '__main__':
     receive = Rec(database, sp);
     receive_thread = threading.Thread(target=receive.start,)
     receive_thread.start()
-
-
-
-    #self.receive.trip_sensor('0013A2004092D86A')
     
     while True:
       pass

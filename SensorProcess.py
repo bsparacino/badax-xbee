@@ -19,14 +19,16 @@ class SensorProcess():
 		self.timeout = 15
 		self.timeout_thread = threading.Thread(target=self.start_timer_process, args=(self.timeout,))
 		self.soundingAlarm = 0
+		self.buzzer = Buzzer()
 
 	def trip_sensor(self,sensorId):
 		self.cancelTimer = 0
 
 		status = self.database.system_status()
-		print 'system status '+status
+		print 'system status '+status		
 
 		if(status=='1'):
+			self.buzzer.beep(659, 125)
 			sensor = self.database.get_sensor(sensorId)			
 
 			if(sensor and sensor['status']):
@@ -34,24 +36,11 @@ class SensorProcess():
 				message = "Sensor Tripped: "+sensor['title']
 				self.database.log(message)
 
-				print sensor
-
 				print 'tripped sensor: '+sensor['title']
 				print sensor['type'] 
 				if(sensor['type'] == 'Door'):
-
 					self.start_timer()
-
 					print 'sensor type: Door'
-
-					#t = threading.Thread(target=self.start_timer, args=(self.timeout,))
-					#t.start()
-					#self.start_timer(5)
-					print 'yay'
-
-					#time.sleep(5)
-					# correct code entered, cancel the timer
-					#self.cancelTimer = 1
 
 				elif(sensor['type'] == 'Window'):
 					print 'sensor type: Window'
@@ -66,6 +55,8 @@ class SensorProcess():
 					self.alert()
 			else:
 				print 'sensor not found'
+		else:
+			self.buzzer.beep(800, 40)
 
 	def start_timer(self):
 		print 'trying to start timer'		
@@ -87,8 +78,7 @@ class SensorProcess():
 		while timeout > 0:
 
 			if(timeout % 4 == 0):
-				buzzer = Buzzer()
-				buzzer.beep(800, 25)
+				self.buzzer.beep(800, 25)
 
 			# correct code entered
 			if self.cancelTimer:
@@ -112,9 +102,6 @@ class SensorProcess():
 	def alert(self):
 		print 'sending alerts'
 
-		#buzzer = Buzzer()
-		#buzzer.beep(659, 125)
-
 		self.alarmSound_thread = threading.Thread(target=self.sound_alarm)
 		self.alarmSound_thread.start()
 
@@ -127,7 +114,7 @@ class SensorProcess():
 			if(user['alert'] == 0):
 				continue;
 
-			message = client.sms.messages.create(to=user['phone'], from_="+15855981936", body="BADAX Test")
+			#message = client.sms.messages.create(to=user['phone'], from_="+15855981936", body="BADAX Test")
 
 			SUBJECT = "BADAX Alerts"
 			TO = user['email']
@@ -147,11 +134,11 @@ class SensorProcess():
 			mailServer.quit()
 
 	def sound_alarm(self):
-		self.soundingAlarm = 1
-		buzzer = Buzzer()
-		while(self.soundingAlarm):
-			buzzer.beep(800, 100)
-			time.sleep(0.1)
+		if(self.soundingAlarm == 0):
+			self.soundingAlarm = 1
+			while(self.soundingAlarm):
+				self.buzzer.beep(800, 100)
+				time.sleep(0.1)
 
 		
 		

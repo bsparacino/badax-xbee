@@ -159,8 +159,8 @@ class Rec():
 
                     self.sp.trip_sensor(self.ByteToHex( data['source_addr_long']))
 
-                elif(samples == False):                    
-                    self.buzzer.beep(659, 125)
+                #elif(samples == False):                    
+                    #self.buzzer.beep(659, 125)
                     #self.sp.stop_timer()
 
                 

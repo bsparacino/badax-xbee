@@ -168,6 +168,13 @@ class Buttons:
                         if(user != 'Invalid Code'):
                             self.sp.stop_timer()
                             self.sp.soundingAlarm = 0
+                            self.database.system_disarm()
+                            message = 'User '+user['first_name']+' '+user['last_name']+' disarmed the system'
+                            print message
+                            self.database.log(message)
+
+                            print user['first_name']+' '+user['last_name']
+                            user = 'Login Successful:\n'+user['first_name']+' '+user['last_name']
 
                         time.sleep(0.5)
                         lcd.clear()

@@ -16,8 +16,7 @@ class Database:
 		u = ''
 		if cur.rowcount:
 			user = cur.fetchone()
-			print user['first_name']+' '+user['last_name']
-			u = 'Login Successful:\n'+user['first_name']+' '+user['last_name']
+			return user
 		else:
 			u = 'Invalid Code'
 
@@ -31,6 +30,16 @@ class Database:
 		row = cur.fetchone()
 		print row
 		return row['value']
+
+	def system_arm(self):
+		cur = self.con.cursor()
+		cur.execute("UPDATE system SET value='1' WHERE field='status'")
+		self.con.commit()
+
+	def system_disarm(self):
+		cur = self.con.cursor()
+		cur.execute("UPDATE system SET value='0' WHERE field='status'")
+		self.con.commit()
 
 	def get_users(self):
 		cur = self.con.cursor()
